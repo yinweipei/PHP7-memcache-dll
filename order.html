@@ -1,0 +1,2273 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+	<meta charset="UTF-8">
+
+	<title>订单</title>
+
+	<link rel="stylesheet" type="text/css" href="__CSS__/common.css">
+
+	<link rel="stylesheet" type="text/css" href="__CSS__/style.css">
+
+    <link rel="stylesheet" type="text/css" href="__CSS__/jquery-ui.min.css">
+
+    <link rel="stylesheet" type="text/css" href="__CSS__/jquery-ui-timepicker-addon.min.css">
+
+
+
+    <script src="__JS__/jquery-1.11.3.min.js"></script>
+
+	<script type="text/javascript" src="__JS__/jquery-ui.min.js"></script>
+
+    <script src="__JS__/jquery-ui-timepicker-addon.min.js"></script>
+
+    <script type="text/javascript" src="__JS__/jquery-ui-timepicker-zh-CN.js"></script>
+
+    <script type="text/javascript">
+
+            (function($) {
+
+
+
+                $(function() {
+
+                    $.datepicker.regional['zh-CN'] = {
+
+                        changeMonth: true,
+
+                        changeYear: true,
+
+                        clearText: '清除',
+
+                        clearStatus: '清除已选日期',
+
+                        closeText: '关闭',
+
+                        closeStatus: '不改变当前选择',
+
+                        prevText: '<上月',
+
+                        prevStatus: '显示上月',
+
+                        prevBigText: '<<',
+
+                        prevBigStatus: '显示上一年',
+
+                        nextText: '下月>',
+
+                        nextStatus: '显示下月',
+
+                        nextBigText: '>>',
+
+                        nextBigStatus: '显示下一年',
+
+                        currentText: '今天',
+
+                        currentStatus: '显示本月',
+
+                        monthNames: ['一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月', '十一月', '十二月'],
+
+                        monthNamesShort: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'],
+
+                        monthStatus: '选择月份',
+
+                        yearStatus: '选择年份',
+
+                        weekHeader: '周',
+
+                        weekStatus: '年内周次',
+
+                        dayNames: ['星期日', '星期一', '星期二', '星期三', '星期四', '星期五', '星期六'],
+
+                        dayNamesShort: ['周日', '周一', '周二', '周三', '周四', '周五', '周六'],
+
+                        dayNamesMin: ['日', '一', '二', '三', '四', '五', '六'],
+
+                        dayStatus: '设置 DD 为一周起始',
+
+                        dateStatus: '选择 m月 d日, DD',
+
+                        dateFormat: 'yy-mm-dd',
+
+                        firstDay: 1,
+
+                        initStatus: '请选择日期',
+
+                        isRTL: false
+
+                    };
+
+
+
+                });
+
+
+
+                $(function() {
+
+
+
+                    $.datepicker.setDefaults($.datepicker.regional['zh-CN']);
+
+                    $("#date_start").datepicker({
+
+                        changeMonth: true,
+
+                        dateFormat: "yy-mm-dd",
+
+                        onClose: function(selectedDate) {
+
+                            $("#date_end").datepicker("option", "minDate", selectedDate);
+
+                        }
+
+                    });
+
+                    $("#date_end").datepicker({
+
+                        changeMonth: true,
+
+                        dateFormat: "yy-mm-dd",
+
+                        onClose: function(selectedDate) {
+
+                            $("#date_start").datepicker("option", "maxDate", selectedDate);
+
+                            $("#date_end").val($(this).val());
+
+                        }
+
+                    });
+
+                });
+
+            }(jQuery));
+
+    </script>
+
+</head>
+
+<style type="text/css">
+
+
+
+	.a_brand{
+
+		font-size: 14px;
+
+	}
+
+	.a_goods_list>span{
+
+		border-right: 1px #ccc solid;
+
+		padding: 0 8px;
+
+	}
+
+	.a_goods_list{
+
+		border-top: 1px #ccc solid;
+
+		border-bottom: 1px #ccc solid;
+
+		font-size: 12px;
+
+		padding: 5px 0;
+
+	}
+
+	.a_goods_list>span{
+
+		display: inline-block;
+
+	}
+
+	.a_goods_title{
+
+		width: 50%;
+
+		display: inline-block;
+
+		overflow: hidden;
+
+		overflow-y:auto;
+
+	}
+
+	.a_goods_attr{
+
+		width: 35%;
+
+		display: inline-block;
+
+		overflow: hidden;
+
+		overflow-y:auto;
+
+	}
+
+	.a_goods_num{
+
+		width: 15%;
+
+	}
+
+	.a-goods-table th{
+
+		border:none;
+
+	}
+
+	.a-goods-table td{
+
+		border: 1px #aaa solid;
+
+	}
+
+</style>
+
+<body>
+
+	<div class="menu-mask">
+
+		<div style="text-align: center;	padding: 10px 0;">
+
+			<span class="fs-14" style="padding: 0 5px;"><img src="__IMAGES__/menu-1.png"></span>
+
+			<span class="fs-14">[{:get_nickname()}]</span>
+
+		</div>
+
+		<div class="menu-list">
+
+			<li>
+
+				<a href="javascript:void(0)" class="one-level-menu">
+
+					<div class="menu-item t-left menu-icon"><img src="__IMAGES__/menu-2.png"></div>
+
+					<div class="menu-item t-center fs-14"><span>主页</span></div>
+
+					<div class="menu-item t-right menu-icon-right"><span class="icon-right"></span></div>
+
+				</a>
+
+			</li>
+
+			<li>
+
+				<a href="javascript:void(0)" class="one-level-menu">
+
+					<div class="menu-item t-left menu-icon"><img src="__IMAGES__/menu-3.png"></div>
+
+					<div class="menu-item t-center fs-14"><span>基础</span></div>
+
+					<div class="menu-item t-right menu-icon-right"><span class="icon-right"></span></div>
+
+				</a>
+
+				<div class="two-level-menu">
+
+					<a href="[{:U('brand/index')}]" class="two-menu-item t-center fs-14"><span>品牌</span></a>
+
+					<a href="[{:U('banner/index')}]" class="two-menu-item t-center fs-14"><span>BANNER</span></a>
+
+					<a href="[{:U('keyword/index')}]" class="two-menu-item t-center fs-14"><span>关键词</span></a>
+
+				</div>
+
+			</li>
+
+			<li>
+
+				<a href="javascript:void(0)" class="one-level-menu">
+
+					<div class="menu-item t-left menu-icon"><img src="__IMAGES__/menu-4.png"></div>
+
+					<div class="menu-item t-center fs-14"><span>商品</span></div>
+
+					<div class="menu-item t-right menu-icon-right"><span class="icon-right"></span></div>
+
+				</a>
+
+				<div class="two-level-menu">
+
+					<a href="[{:U('classify/index')}]" class="two-menu-item t-center fs-14"><span>分类</span></a>
+
+					<a href="[{:U('attribution/index')}]" class="two-menu-item t-center fs-14"><span>属性</span></a>
+
+					<a href="[{:U('goods/index')}]" class="two-menu-item t-center fs-14"><span>列表</span></a>
+
+				</div>
+
+			</li>
+
+			<li>
+
+				<a href="[{:U('thematic/index')}]" class="one-level-menu">
+
+					<div class="menu-item t-left menu-icon"><img src="__IMAGES__/menu-5.png"></div>
+
+					<div class="menu-item t-center fs-14"><span>专题</span></div>
+
+					<div class="menu-item t-right menu-icon-right"><span class="icon-right"></span></div>
+
+				</a>
+
+			</li>
+
+			<li>
+
+				<a href="[{:U('order/index')}]" class="one-level-menu mene_color">
+
+					<div class="menu-item t-left menu-icon"><img src="__IMAGES__/menu-6.png"></div>
+
+					<div class="menu-item t-center fs-14"><span>订单</span></div>
+
+					<div class="menu-item t-right menu-icon-right"><span class="icon-right"></span></div>
+
+				</a>
+
+			</li>
+
+			<li>
+
+				<a href="javascript:void(0)" class="one-level-menu">
+
+					<div class="menu-item t-left menu-icon"><img src="__IMAGES__/menu-7.png"></div>
+
+					<div class="menu-item t-center fs-14"><span>营销</span></div>
+
+					<div class="menu-item t-right menu-icon-right"><span class="icon-right"></span></div>
+
+				</a>
+
+			</li>
+
+			<li>
+
+				<a href="[{:U('member/index')}]" class="one-level-menu">
+
+					<div class="menu-item t-left menu-icon"><img src="__IMAGES__/menu-8.png"></div>
+
+					<div class="menu-item t-center fs-14"><span>会员</span></div>
+
+					<div class="menu-item t-right menu-icon-right"><span class="icon-right"></span></div>
+
+				</a>
+
+			</li>
+
+			<li>
+
+				<a href="javascript:void(0)" class="one-level-menu">
+
+					<div class="menu-item t-left menu-icon"><img src="__IMAGES__/menu-9.png"></div>
+
+					<div class="menu-item t-center fs-14"><span>分销</span></div>
+
+					<div class="menu-item t-right menu-icon-right"><span class="icon-right"></span></div>
+
+				</a>
+
+				<div class="two-level-menu show">
+
+					<a href="[{:U('memberadviser/index')}]" class="two-menu-item t-center fs-14"><span>我的团队</span></a>
+
+					<a href="[{:U('memberadviser/money')}]" class="two-menu-item t-center fs-14"><span>资金明细</span></a>
+
+					<a href="[{:U('memberadviser/order')}]" class="two-menu-item t-center fs-14"><span>订单明细</span></a>
+
+				</div>
+
+			</li>
+
+			<li>
+
+				<a href="javascript:void(0)" class="one-level-menu">
+
+					<div class="menu-item t-left menu-icon"><img src="__IMAGES__/menu-10.png"></div>
+
+					<div class="menu-item t-center fs-14"><span>评论</span></div>
+
+					<div class="menu-item t-right menu-icon-right"><span class="icon-right"></span></div>
+
+				</a>
+
+			</li>
+
+			<li>
+
+				<a href="javascript:void(0)" class="one-level-menu">
+
+					<div class="menu-item t-left menu-icon"><img src="__IMAGES__/menu-11.png"></div>
+
+					<div class="menu-item t-center fs-14"><span>物流</span></div>
+
+					<div class="menu-item t-right menu-icon-right"><span class="icon-right"></span></div>
+
+				</a>
+
+			</li>
+
+			<li>
+
+				<a href="javascript:void(0)" class="one-level-menu">
+
+					<div class="menu-item t-left menu-icon"><img src="__IMAGES__/menu-12.png"></div>
+
+					<div class="menu-item t-center fs-14"><span>分析</span></div>
+
+					<div class="menu-item t-right menu-icon-right"><span class="icon-right"></span></div>
+
+				</a>
+
+			</li>
+
+			<li>
+
+				<a href="javascript:void(0)" class="one-level-menu">
+
+					<div class="menu-item t-left menu-icon"><img src="__IMAGES__/menu-13.png"></div>
+
+					<div class="menu-item t-center fs-14"><span>微信</span></div>
+
+					<div class="menu-item t-right menu-icon-right"><span class="icon-right"></span></div>
+
+				</a>
+
+			</li>
+
+			<li>
+
+				<a href="javascript:void(0)" class="one-level-menu">
+
+					<div class="menu-item t-left menu-icon"><img src="__IMAGES__/menu-14.png"></div>
+
+					<div class="menu-item t-center fs-14"><span>系统</span></div>
+
+					<div class="menu-item t-right menu-icon-right"><span class="icon-right"></span></div>
+
+				</a>
+
+			</li>
+
+		</div>
+
+		
+
+	</div>
+
+
+
+	
+
+	<div class="page-top">
+
+		<img src="__IMAGES__/logo2.png">
+
+		<span class="close"  data-link="[{:U('Outlogin/index')}]"><img src="__IMAGES__/close.png"></span>
+
+		<span class="fs-14" style="margin-left:15px;font-weight: bold;">颜控村后台管理系统</span>
+
+	</div>
+
+	<div class="page-con clearfix">
+
+		<div class="page-left left" style="height:710px;">
+
+			<div class="page-list p-l50 m-t20">
+
+				<div style="margin-top:10px;margin-bottom:15px;">
+
+					<button type="button" class="btn add-bar-btn" onclick='location.href="[{:U('operate',array('type'=>'export'))}]"'>↓导出</button>
+
+				</div>
+
+				<div class="list-mask">
+
+					<form>
+
+						<table class="table table-bordered">
+
+			                <thead>
+
+			                    <tr>
+
+			                        <th>
+
+			                        	 ID 
+
+			                        	 </th>
+
+			                        <th>
+
+			                        	 下单人ID
+
+			                        </th>			                       
+
+			                        <th>
+
+			                        	 下单人
+
+			                        </th>
+
+			                        <!-- </th> -->
+
+
+
+			                        <th>
+
+			                            下单时间
+
+			                        </th>
+
+			                        <th>
+
+			                           订单状态
+
+			                        </th>
+
+			                        <th>
+
+			                        	收货人
+
+			                        </th>
+
+			                        <th>
+
+			                        	商品名称
+
+			                        </th>
+
+			                        <th>
+
+			                        	合计
+
+			                        </th>
+
+									<th>
+
+			                        	操作
+
+			                        </th>
+
+			                    </tr>
+
+			                </thead>
+
+			                <tbody>
+
+							<foreach name="_list" item="value">	
+
+				                <tr>
+
+				               		<td class="i_id">
+
+				                        [{$value['orderid']}]
+
+				                    </td>
+
+				               		<td>
+
+				                        [{$value['userid']}]
+
+				                    </td>
+
+				                    <td>
+
+				                     	[{$value['userid']|get_member_name}]
+
+				                    </td>
+
+				                    <td>
+
+				                       <span>[{:date('Y-m-d',$value['create_time'])}]</span>
+
+				                       <span>[{:date('H:i',$value['create_time'])}]</span>
+
+				                    </td>
+
+				                    <td class="i_state">
+
+										<eq name="value['status']" value="1">待付款</eq><eq name="value['status']" value="2">待发货</eq><eq name="value['status']" value="3">待收货</eq><eq name="value['status']" value="4">已完成</eq>				                       
+
+				                    </td>
+
+				                    <td>
+
+				                       [{$value['name']}]
+
+				                    </td>
+
+				                    <td class="ellipsis">
+
+				                    	[{$value['goods']['goodsname']}]
+
+				                    </td>
+
+				                    <td>
+
+				                       [{$value['money']}]
+
+				                    </td>
+
+									<td >
+
+				                       <span class="i_edit" data-link="[{:U('order/operate',array('id'=>$value['orderid'],'type'=>'edit'))}]"><a href="javascript:void(0)">编辑</a></span>
+
+				                    </td>
+
+				                </tr>
+
+				            </foreach>
+
+			                </tbody>
+
+		            	</table>
+
+	            	</form>
+
+				</div>
+
+				<div class="paging-list clearfix">
+
+					<if condition="$count gt 10">
+
+				 	<span>共[{$count}]条</span>
+
+				 	[{$_page}]
+
+					</if>
+
+		        </div>
+
+			</div>
+
+		</div>
+
+		<div class="page-right left">
+
+			<div class="page-r-top" style="padding-top:10px;">
+
+				<form action="[{:U('order/index')}]">
+
+				<div class="m-t10">
+
+					<label class="fs-14 m-r6 label-w">ID:</label>
+
+					<input type="text" name="orderid" value="[{$_GET['orderid']}]" placeholder="请输入ID" class="t-input">
+
+				</div>
+
+			<!-- 	<div class="m-t10">
+
+					<label class="fs-14 m-r6 label-w">下单ID:</label>
+
+					<input type="text" name="name" value="[{$_GET['name']}]" placeholder="请输入下单人姓名" class="t-input">
+
+				</div> -->
+
+				<div class="m-t10">
+
+					<label class="fs-14 m-r6 label-w">下单人:</label>
+
+					<input type="text" name="name" value="[{$_GET['name']}]" placeholder="请输入下单人姓名" class="t-input">
+
+				</div>
+
+				<div class="m-t10">
+
+					<label class="fs-14 m-r6 label-w">下单时间:</label>
+
+					<div style="width:150px;height: 25px;display: inline-block;position: relative;">
+
+						<input type="text" name="start_time" value="[{$_GET['start_time']}]" class="t-input date-icon" readonly id="date_start">
+
+					</div><span class="fs-14 m-l10">至</span>
+
+					<div style="width:150px;height:25px;display:inline-block;position:relative;margin-left:108px;margin-top:10px;">
+
+						<input type="text" name="end_time" value="[{$_GET['end_time']}]" class="t-input date-icon" readonly id="date_end">
+
+					</div>
+
+				</div>
+
+				<div class="m-t10">
+
+					<label class="fs-14 m-r6 label-w">订单状态:</label>
+
+					<div style="width:150px;height: 25px;display: inline-block;position: relative;">
+
+						<input type="text" class="t-input-3" value="<notempty name="_GET['status']"><eq name="_GET['status']" value="1">待付款</eq><eq name="_GET['status']" value="2">待发货</eq><eq name="_GET['status']" value="3">待收货</eq><eq name="_GET['status']" value="4">已完成</eq><else />全部</notempty>" id="one-level-cate">
+
+						<span class="drop-icon"></span>
+
+						<select class="select" name="status">
+
+						  <option value ="">全部</option>
+
+						  <option value ="1" <eq name="_GET['status']" value="0">selected</eq>>待付款</option>
+
+						  <option value ="2" <eq name="_GET['status']" value="1">selected</eq>>待发货</option>
+
+						  <option value ="3" <eq name="_GET['status']" value="2">selected</eq>>待收货</option>
+
+						  <option value ="4" <eq name="_GET['status']" value="3">selected</eq>>已完成</option>
+
+						</select>
+
+					</div>
+
+				</div>
+
+				<div class="m-t20"><button type="submit"  class="btn m-l-150">查询</button></div>
+
+				</form>
+
+			</div>
+
+			<div class="page-r-bottom" style="padding-top:10px;">
+
+				<form class="put">
+
+					<div class="pending-payment none">
+
+						<div class="m-t10"><label class="fs-14 m-r6 label-w">ID:</label><label class="fs-14 n_id">20186548248214</label></div>
+
+						<div class="m-t10">
+
+							<label class="fs-14 m-r6 label-w">下单人:</label>
+
+							<label class="fs-14 n_order_name">张三</label>
+
+						</div>
+
+						<div class="m-t10">
+
+							<label class="fs-14 m-r6 label-w">下单时间:</label>
+
+							<label class="fs-14 n_time">2018-04-18 12:00:00</label>
+
+						</div>
+
+						<div class="m-t10">
+
+							<label class="fs-14 m-r6 label-w">订单状态:</label>
+
+							<label class="fs-14 n_statu">待付款</label>
+
+						</div>
+
+						<div class="m-t10">
+
+							<label class="fs-14 m-r6 label-w">收货人:</label>
+
+							<input type="text" class="t-input n_collect_name">
+
+						</div>
+
+						<div class="m-t10">
+
+							<label class="fs-14 m-r6 label-w">收货地址:</label>
+
+							<input type="text" class="t-input n_address">
+
+						</div>
+
+						<div class="m-t10">
+
+							<label class="fs-14 m-r6 label-w">联系电话:</label>
+
+							<input type="text" class="t-input n_phone">
+
+						</div>
+
+						<div class="m-t10">
+
+							<label class="fs-14 m-r6 label-w">购买商品:</label>
+
+							<div class="buy-goods-list n_goods">
+
+								<div>哥弟</div>
+
+								<table class="a-goods-table">
+
+
+
+									  <tbody>
+
+									    <tr>
+
+									      <td>January</td>
+
+									      <td>$100</td>
+
+									    </tr>
+
+									    <tr>
+
+									      <td>February</td>
+
+									      <td>$80</td>
+
+									    </tr>
+
+									  </tbody>
+
+								</table>
+
+							</div>
+
+						</div>
+
+						<div class="m-t10">
+
+							<label class="fs-14 m-r6 label-w">合计:</label>
+
+							<input type="text" class="t-input n_total input-money">
+
+						</div>
+
+						<div class="m-t10">
+
+							<label class="fs-14 m-r6 label-w">邮费:</label>
+
+							<input type="text" class="t-input n_post input-money" value="0">
+
+						</div>
+
+						<div class="m-t10">
+
+							<label class="fs-14 m-r6 label-w">实付:</label>
+
+							<label class="fs-14 n_pay">240</label>
+
+						</div>
+
+						<div class="m-t10">
+
+							<label class="fs-14 m-r6 label-w">备注:</label>
+
+							<input type="text" class="t-input n_remark1" placeholder="请填写备注">
+
+						</div>
+
+						<div class="m-t20">
+
+							<button type="button" class="btn payment-preservation-btn" style="margin-left:60px;" data-link="[{:U('operate',array('type'=>'edit'))}]">保存</button>
+
+							<button type="button" class="btn confirm-payment" style="margin-left:60px;" data-link="[{:U('operate',array('type'=>'status'),'')}]/status/2">确认支付</button>
+
+						</div>
+
+					</div>
+
+					<div class="pending-delivery none">
+
+						<div class="m-t10"><label class="fs-14 m-r6 label-w">ID:</label><label class="fs-14 n_id">20186548248214</label></div>
+
+						<div class="m-t10">
+
+							<label class="fs-14 m-r6 label-w">下单人:</label>
+
+							<label class="fs-14 n_order_name">张三2</label>
+
+						</div>
+
+						<div class="m-t10">
+
+							<label class="fs-14 m-r6 label-w">下单时间:</label>
+
+							<label class="fs-14 n_time">2018-04-18 12:00:00</label>
+
+						</div>
+
+						<div class="m-t10">
+
+							<label class="fs-14 m-r6 label-w">订单状态:</label>
+
+							<label class="fs-14 n_statu">待发货</label>
+
+						</div>
+
+						<div class="m-t10">
+
+							<label class="fs-14 m-r6 label-w">收货人:</label>
+
+							<label class="fs-14 n_collect_name">张三</label>
+
+						</div>
+
+						<div class="m-t10">
+
+							<label class="fs-14 m-r6 label-w">收货地址:</label>
+
+							<label class="fs-14 n_address">广东省广州市白云区XXXX</label>
+
+						</div>
+
+						<div class="m-t10">
+
+							<label class="fs-14 m-r6 label-w">联系电话:</label>
+
+							<label class="fs-14 n_phone">18577757575</label>
+
+						</div>
+
+						
+
+						<div class="m-t10">
+
+							<label class="fs-14 m-r6 label-w">购买商品:</label>
+
+							<div class="buy-goods-list n_goods">
+
+								<!-- <div class="a_brand">哥弟</div>
+
+								<div class="a_goods_list">
+
+									<span>"哥弟.皓月 中秋月饼礼盒"</span>
+
+									<span>"月饼"</span>
+
+									<span>"99"</span>
+
+								</div>
+
+								<div class="a_goods_list">
+
+									<span>"哥弟.皓月 中秋月饼礼盒"</span>
+
+									<span>"月饼"</span>
+
+									<span>"99"</span>
+
+								</div> -->
+
+								<div>哥弟</div>
+
+								<table class="a-goods-table">
+
+									  <tbody>
+
+									    <tr>
+
+									      <td>January</td>
+
+									       <td>哥弟.皓月 中秋月饼礼盒</td>
+
+									      <td>$100</td>
+
+									    </tr>
+
+									    <tr>
+
+									      <td>February</td>
+
+									       <td>哥弟.皓月 中秋月饼礼盒</td>
+
+									      <td>$80</td>
+
+									    </tr>
+
+									  </tbody>
+
+								</table>
+
+							</div>
+
+						</div>
+
+						<div class="m-t10">
+
+							<label class="fs-14 m-r6 label-w">合计:</label>
+
+							<label class="fs-14 n_total">240</label>
+
+						</div>
+
+						<div class="m-t10">
+
+							<label class="fs-14 m-r6 label-w">邮费:</label>
+
+							<label class="fs-14 n_post">0</label>
+
+						</div>
+
+						<div class="m-t10">
+
+							<label class="fs-14 m-r6 label-w">实付:</label>
+
+							<label class="fs-14 n_pay">240</label>
+
+						</div>
+
+						<div class="m-t10">
+
+							<label class="fs-14 m-r6 label-w">物流公司:</label>
+
+							<input type="text" class="t-input n_logistics" placeholder="物流公司">
+
+						</div>
+
+						<div class="m-t10">
+
+							<label class="fs-14 m-r6 label-w">物流单号:</label>
+
+							<input type="text" class="t-input n_logistics_num" placeholder="请输入物流单号">
+
+						</div>
+
+						<div class="m-t10">
+
+							<label class="fs-14 m-r6 label-w">备注:</label>
+
+							<input type="text" class="t-input n_remark2" placeholder="请填写备注">
+
+						</div>
+
+						<div class="m-t20">
+
+							<button type="button" class="btn delivery-preservation-btn" style="margin-left:60px;" data-link="[{:U('operate',array('type'=>'edit'))}]">保存</button>
+
+							<button type="button" class="btn confirm-delivery" style="margin-left:60px;" data-link="[{:U('operate',array('type'=>'status'),'')}]/status/3">确认发货</button>
+
+						</div>
+
+					</div>
+
+					<div class="pending-received none">
+
+						<div class="m-t10"><label class="fs-14 m-r6 label-w">ID:</label><label class="fs-14 n_id">20186548248214</label></div>
+
+						<div class="m-t10">
+
+							<label class="fs-14 m-r6 label-w">下单人:</label>
+
+							<label class="fs-14 n_order_name">张三3</label>
+
+						</div>
+
+						<div class="m-t10">
+
+							<label class="fs-14 m-r6 label-w">下单时间:</label>
+
+							<label class="fs-14 n_time">2018-04-18 12:00:00</label>
+
+						</div>
+
+						<div class="m-t10">
+
+							<label class="fs-14 m-r6 label-w">订单状态:</label>
+
+							<label class="fs-14 n_statu">待收货</label>
+
+						</div>
+
+						<div class="m-t10">
+
+							<label class="fs-14 m-r6 label-w">收货人:</label>
+
+							<label class="fs-14 n_collect_name">张三</label>
+
+						</div>
+
+						<div class="m-t10">
+
+							<label class="fs-14 m-r6 label-w">收货地址:</label>
+
+							<label class="fs-14 n_address">广东省广州市白云区XXXX</label>
+
+						</div>
+
+						<div class="m-t10">
+
+							<label class="fs-14 m-r6 label-w">联系电话:</label>
+
+							<label class="fs-14 n_phone">18577757575</label>
+
+						</div>
+
+						<div class="m-t10">
+
+							<label class="fs-14 m-r6 label-w">物流单号:</label>
+
+							<label class="fs-14 tans_no"></label>
+
+						</div>
+
+						<div class="m-t10">
+
+							<label class="fs-14 m-r6 label-w">物流公司:</label>
+
+							<label class="fs-14 logistics"></label>
+
+						</div>
+
+						<div class="m-t10">
+
+							<label class="fs-14 m-r6 label-w">购买商品:</label>
+
+							<div class="buy-goods-list n_goods">
+
+								<!-- <div class="a_brand">哥弟</div>
+
+								<div class="a_goods_list">
+
+									<span>"哥弟.皓月 中秋月饼礼盒"</span>
+
+									<span>"月饼"</span>
+
+									<span>"99"</span>
+
+								</div>
+
+								<div class="a_goods_list">
+
+									<span>"哥弟.皓月 中秋月饼礼盒"</span>
+
+									<span>"月饼"</span>
+
+									<span>"99"</span>
+
+								</div> -->
+
+								<table class="a-goods-table">
+
+									  <thead>
+
+									    <tr>
+
+									      <th>Month</th>
+
+									    </tr>
+
+									  </thead>
+
+									  <tbody>
+
+									    <tr>
+
+									      <td>January</td>
+
+									      <td>$100</td>
+
+									    </tr>
+
+									    <tr>
+
+									      <td>February</td>
+
+									      <td>$80</td>
+
+									    </tr>
+
+									  </tbody>
+
+								</table>
+
+							</div>
+
+						</div>
+
+						<div class="m-t10">
+
+							<label class="fs-14 m-r6 label-w">合计:</label>
+
+							<label class="fs-14 n_total">240</label>
+
+						</div>
+
+						<div class="m-t10">
+
+							<label class="fs-14 m-r6 label-w">邮费:</label>
+
+							<label class="fs-14 n_post">0</label>
+
+						</div>
+
+						<div class="m-t10">
+
+							<label class="fs-14 m-r6 label-w">实付:</label>
+
+							<label class="fs-14 n_pay">240</label>
+
+						</div>
+
+						<div class="m-t10">
+
+							<label class="fs-14 m-r6 label-w">备注:</label>
+
+							<input type="text" class="t-input n_remark3" placeholder="请填写备注">
+
+						</div>
+
+						<div class="m-t20">
+
+							<button type="button" class="btn edit-remark" onclick="edit_remark(this,1);" style="margin-left:30px;" data-link="[{:U('operate',array('type'=>'edit'))}]">确认修改</button>
+
+							<button type="button" class="btn" style="margin-left:30px;">查看物流</button>
+
+							<button type="button" class="btn confirm-collect" style="margin-left:30px;" data-link="[{:U('operate',array('type'=>'status'),'')}]/status/4">确认收货</button>
+
+						</div>
+
+					</div>
+
+					<div class="complete-the-order none">
+
+						<div class="m-t10"><label class="fs-14 m-r6 label-w">ID:</label><label class="fs-14 n_id">20186548248214</label></div>
+
+						<div class="m-t10">
+
+							<label class="fs-14 m-r6 label-w">下单人:</label>
+
+							<label class="fs-14 n_order_name">张三</label>
+
+						</div>
+
+						<div class="m-t10">
+
+							<label class="fs-14 m-r6 label-w">下单时间:</label>
+
+							<label class="fs-14 n_time">2018-04-18 12:00:00</label>
+
+						</div>
+
+						<div class="m-t10">
+
+							<label class="fs-14 m-r6 label-w">订单状态:</label>
+
+							<label class="fs-14 n_statu">已完成</label>
+
+						</div>
+
+						<div class="m-t10">
+
+							<label class="fs-14 m-r6 label-w">收货人:</label>
+
+							<label class="fs-14 n_collect_name">张三</label>
+
+						</div>
+
+						<div class="m-t10">
+
+							<label class="fs-14 m-r6 label-w">收货地址:</label>
+
+							<label class="fs-14 n_address">广东省广州市白云区XXXX</label>
+
+						</div>
+
+						<div class="m-t10">
+
+							<label class="fs-14 m-r6 label-w">联系电话:</label>
+
+							<label class="fs-14 n_phone">18577757575</label>
+
+						</div>
+
+						<div class="m-t10">
+
+							<label class="fs-14 m-r6 label-w">物流单号:</label>
+
+							<label class="fs-14 tans_no"></label>
+
+						</div>
+
+						<div class="m-t10">
+
+							<label class="fs-14 m-r6 label-w">物流公司:</label>
+
+							<label class="fs-14 logistics"></label>
+
+						</div>
+
+						<div class="m-t10">
+
+							<label class="fs-14 m-r6 label-w">购买商品:</label>
+
+							<div class="buy-goods-list n_goods">
+
+
+
+								<table class="a-goods-table">
+
+									  <thead>
+
+									    <tr>
+
+									      <th>Month</th>
+
+									    </tr>
+
+									  </thead>
+
+									  <tbody>
+
+									    <tr>
+
+									      <td>January</td>
+
+									      <td>$100</td>
+
+									    </tr>
+
+									    <tr>
+
+									      <td>February</td>
+
+									      <td>$80</td>
+
+									    </tr>
+
+									  </tbody>
+
+								</table>
+
+							</div>
+
+						</div>
+
+						<div class="m-t10">
+
+							<label class="fs-14 m-r6 label-w">合计:</label>
+
+							<label class="fs-14 n_total">240</label>
+
+						</div>
+
+						<div class="m-t10">
+
+							<label class="fs-14 m-r6 label-w">邮费:</label>
+
+							<label class="fs-14 n_post">0</label>
+
+						</div>
+
+						<div class="m-t10">
+
+							<label class="fs-14 m-r6 label-w">实付:</label>
+
+							<label class="fs-14 n_pay">240</label>
+
+						</div>
+
+						<div class="m-t10">
+
+							<label class="fs-14 m-r6 label-w">备注:</label>
+
+							<input type="text" class="t-input n_remark4" placeholder="请填写备注">
+
+						</div>
+
+						<div class="m-t20">
+
+							<button type="button" class="btn edit-remark" onclick="edit_remark(this,2);" style="margin-left:60px;" data-link="[{:U('operate',array('type'=>'edit'))}]">确认修改</button>
+
+							<button type="button" class="btn m-l-150">查看物流</button>
+
+						</div>
+
+					</div>
+
+				</form>
+
+			</div>
+
+		</div>
+
+	</div>
+
+	<div class="popup-tip-mask none">
+
+		<div class="popup-tip">
+
+			<div class="tip-txt">确认发货</div>
+
+			<div class="tip-btn-mask">
+
+				<span class="tip-btn cancel-tip-btn" style="border-top:2px #a4162e solid;">取消</span>
+
+				<span class="tip-btn confirm-tip-btn" style="border-top:2px #a4162e solid;border-left:2px #a4162e solid;">确定</span>
+
+			</div>
+
+		</div>
+
+	</div>
+
+	<div class="popup-logistics-mask none">
+
+		<div class="popup-logistics">
+
+			<div class="logistics-title">物流信息</div>
+
+			<div>
+
+				<div class="logistics-txt">物流公司:顺丰物流有限公司</div>
+
+				<div class="logistics-txt">快递单号:201801520621774</div>
+
+				<div class="logistics-txt">发货时间:2018-04-22 14:20:20</div>
+
+			</div>
+
+			<div style="position:relative;margin-top:10px;height:500px;overflow-y:auto;">
+
+				<div class="line"></div>
+
+				<div class="logistics-list">
+
+					<div class="logistics-item">
+
+						<div class="cicle"></div>
+
+						<div class="logistics-info">
+
+							<div class="logistics-txt">东莞市 包租婆-已签收,感谢您选择顺丰快递,期待再次为您服务.</div>
+
+							<div class="logistics-txt">2018-02-22 14:20:00</div>
+
+						</div>
+
+					</div>
+
+					<div class="logistics-item">
+
+						<div class="cicle"></div>
+
+						<div class="logistics-info">
+
+							<div class="logistics-txt">东莞市 包租婆-已签收,感谢您选择顺丰快递,期待再次为您服务.</div>
+
+							<div class="logistics-txt">2018-02-22 14:20:00</div>
+
+						</div>
+
+					</div>
+
+				</div>
+
+			</div>
+
+			<div class="close-icon"><img src="__IMAGES__/close-icon.png"></div>
+
+		</div>
+
+	</div>
+
+	<div class="popup-error-mask none">
+
+		<div class="popup-error">
+
+			<div class="popup-error-txt t-center fs-16"></div>
+
+			<div class="popup-error-btn-mask">
+
+				<div class="popup-error-btn">确定</div>
+
+			</div>
+
+		</div>
+
+	</div>
+
+<script type="text/javascript" src="__JS__/common.js"></script>
+
+<script type="text/javascript">
+
+//弹窗
+
+// $('.tip-btn').on('click',function(){
+
+// 	$('.popup-tip-mask').fadeOut(100);
+
+// })
+
+// $('.close-icon').on('click',function(){
+
+// 	$('.popup-logistics-mask').fadeOut(100);
+
+// })
+
+// $('.popup-error-btn').on('click',function(){
+
+// 	$('.popup-error-mask').fadeOut(100);
+
+// });
+
+
+
+//获取订单详情
+
+$('.i_edit').on('click',function(){
+
+	var data={};
+
+	var url=$(this).attr('data-link');
+
+	$.get(url,data).success(function(req){
+
+		console.log(req);
+
+		if (req.status==1) {
+
+			var status=req.order_info.status;
+
+			status=parseInt(status);
+
+			switch(status)
+
+			{
+
+				case 1:
+
+					//console.log(55555)
+
+					$('.pending-payment').removeClass('none');
+
+					$('.pending-payment').siblings().addClass('none');
+
+					$('.n_id').html(req.order_info.orderid);
+
+					$('.n_order_name').html(req.order_info.username)
+
+					$('.n_time').html(req.order_info.create_time);
+
+					$('.n_collect_name').val(req.order_info.name);
+
+					$('.n_address').val(req.order_info.address);
+
+					$('.n_phone').val(req.order_info.mobile);
+
+					var goods='';
+
+						for(var i=0;i<req.order_info.goods.length;i++){
+
+							goods+='<div><div>'+req.order_info.goods[i].brand+'</div><table class="a-goods-table"><tbody><tr><td>货号</td><td>名称</td><td>规格</td><td>数量</tr>';
+
+							for(var j=0;j<req.order_info.goods[i].goods.length;j++){
+
+							goods+= '<tr>'
+
+										+'<td>'+req.order_info.goods[i].goods[j].goodsnum+'</td>'
+
+										+'<td>'+req.order_info.goods[i].goods[j].goodsname+'</td>'
+
+										+'<td>'+req.order_info.goods[i].goods[j].attr+'</td>'
+
+										+'<td>'+req.order_info.goods[i].goods[j].num+'</td>'
+
+									+'</tr>'
+
+							}
+
+							goods+='</tbody></table></div>';
+
+						}
+
+					$('.n_goods').html(goods);
+
+					$('.n_total').val(req.order_info.money);
+
+					$('.n_post').val(req.order_info.postage);
+
+					$('.n_pay').html(req.order_info.money);
+
+					$('.n_remark1').val(req.order_info.remark)
+
+				break;
+
+				case 2:
+
+					//console.log(55555)
+
+					$('.pending-delivery').removeClass('none');
+
+					$('.pending-delivery').siblings().addClass('none');
+
+					$('.n_id').html(req.order_info.orderid);
+
+					$('.n_order_name').html(req.order_info.username)
+
+					$('.n_time').html(req.order_info.create_time);
+
+					$('.n_collect_name').html(req.order_info.name);
+
+					$('.n_address').html(req.order_info.address);
+
+					$('.n_phone').html(req.order_info.mobile);
+
+					$('.n_message').html('');
+
+					var goods='';
+
+					// for(var i=0;i<req.order_info.goods.length;i++){
+
+					// 	goods+='<div class="car_list_title"><label  class="tickList iconfont icon-circle"></label><span>'+req.order_info.goods[i].brand+'</span></div><ol class="car_ol">';
+
+					// 	for(var j=0;j<req.order_info.goods[i].goods.length;j++){
+
+					// 		goods+='<li class="car_li"><p class="car_li_img"><img   src="'+req.order_info.goods[i].goods[j].img_url+'" alt=""></p><section class="car_list_detail"><div class="car_detail_top"><p>'+req.order_info.goods[i].goods[j].goodsname+'</p><p>'+req.order_info.goods[i].goods[j].attr.key1+' '+req.order_info.goods[i].goods[j].attr.value1+req.order_info.goods[i].goods[j].attr.key2+' '+req.order_info.goods[i].goods[j].attr.value2+req.order_info.goods[i].goods[j].attr.key3+' '+req.order_info.goods[i].goods[j].attr.value3+'</p></div><div class="car_detail_price"><section class="car_detail_pri"><p>RMB:</p><p class="goods_money">'+req.order_info.goods[i].goods[j].attr.money+'</p></section><section class="car_detail_num"><i class="iconfont icon-minus_btn icon-minus"></i><span class="goods_num">'+req.order_info.goods[i].goods[j].attr.num+'</span><i class="iconfont  icon-add_btn icon-add"></i></section></div></section></li>'
+
+					// 	}
+
+					// 	goods+='</ol>';
+
+						
+
+					// }
+
+						for(var i=0;i<req.order_info.goods.length;i++){
+
+							goods+='<div><div>'+req.order_info.goods[i].brand+'</div><table class="a-goods-table"><tbody><tr><td>货号</td><td>名称</td><td>规格</td><td>数量</tr>';
+
+							for(var j=0;j<req.order_info.goods[i].goods.length;j++){
+
+							goods+= '<tr>'
+
+										+'<td>'+req.order_info.goods[i].goods[j].goodsnum+'</td>'
+
+										+'<td>'+req.order_info.goods[i].goods[j].goodsname+'</td>'
+
+										+'<td>'+req.order_info.goods[i].goods[j].attr+'</td>'
+
+										+'<td>'+req.order_info.goods[i].goods[j].num+'</td>'
+
+									+'</tr>'
+
+							}
+
+							goods+='</tbody></table></div>';
+
+						}
+
+					$('.n_goods').html(goods);
+
+					$('.n_total').html(req.order_info.money);
+
+					$('.n_post').html(req.order_info.postage);
+
+					$('.n_pay').html(req.order_info.money);
+
+					$('.n_logistics_num').val(req.order_info.tans_no);
+
+					$('.n_logistics').val(req.order_info.logistics);
+
+					$('.n_remark2').val(req.order_info.remark);
+
+				break;
+
+				case 3:
+
+					//console.log(222222222);
+
+					$('.pending-received').removeClass('none');
+
+					$('.pending-received').siblings().addClass('none')
+
+					$('.n_id').html(req.order_info.orderid);
+
+					$('.n_order_name').html(req.order_info.username)
+
+					$('.n_time').html(req.order_info.create_time);
+
+					$('.n_collect_name').html(req.order_info.name);
+
+					$('.n_address').html(req.order_info.address);
+
+					$('.n_phone').html(req.order_info.mobile);
+
+					$('.n_message').html('');
+
+					var goods='';
+
+						for(var i=0;i<req.order_info.goods.length;i++){
+
+							goods+='<div><div>'+req.order_info.goods[i].brand+'</div><table class="a-goods-table"><tbody><tr><td>货号</td><td>名称</td><td>规格</td><td>数量</tr>';
+
+							for(var j=0;j<req.order_info.goods[i].goods.length;j++){
+
+							goods+= '<tr>'
+
+										+'<td>'+req.order_info.goods[i].goods[j].goodsnum+'</td>'
+
+										+'<td>'+req.order_info.goods[i].goods[j].goodsname+'</td>'
+
+										+'<td>'+req.order_info.goods[i].goods[j].attr+'</td>'
+
+										+'<td>'+req.order_info.goods[i].goods[j].num+'</td>'
+
+									+'</tr>'
+
+							}
+
+							goods+='</tbody></table></div>';
+
+						}
+
+					$('.n_goods').html(goods);
+
+					$('.n_total').html(req.order_info.money);
+
+					$('.n_post').html(req.order_info.postage);
+
+					$('.tans_no').html(req.order_info.tans_no);
+
+					$('.logistics').html(req.order_info.logistics);
+
+					$('.n_pay').html(req.order_info.money);
+
+					$('.n_remark3').val(req.order_info.remark);
+
+				break;
+
+				case 4:
+
+					//console.log(33333333);
+
+					$('.complete-the-order').removeClass('none');
+
+					$('.complete-the-order').siblings().addClass('none')
+
+					$('.n_id').html(req.order_info.orderid);
+
+					$('.n_order_name').html(req.order_info.username)
+
+					$('.n_time').html(req.order_info.create_time);
+
+					$('.n_collect_name').html(req.order_info.name);
+
+					$('.n_address').html(req.order_info.address);
+
+					$('.n_phone').html(req.order_info.mobile);
+
+					$('.n_message').html('');
+
+					var goods='';
+
+						/*for(var i=0;i<req.order_info.goods.length;i++){
+
+							goods+='<div class="a_brand">'+req.order_info.goods[i].brand+'</div>';
+
+							for(var j=0;j<req.order_info.goods[i].goods.length;j++){
+
+							goods+= '<div class="a_goods_list">'
+
+										+'<span class="a_goods_title">'+req.order_info.goods[i].goods[j].goodsname+'</span>'
+
+										+'<span class="a_goods_attr">'+req.order_info.goods[i].goods[j].attr+'</span>'
+
+										+'<span class="a_goods_num">'+req.order_info.goods[i].goods[j].num+'</span>'
+
+									+'</div>'
+
+							}
+
+						}*/
+
+					for(var i=0;i<req.order_info.goods.length;i++){
+
+							goods+='<div><div>'+req.order_info.goods[i].brand+'</div><table class="a-goods-table"><tbody><tr><td>货号</td><td>名称</td><td>规格</td><td>数量</tr>';
+
+							for(var j=0;j<req.order_info.goods[i].goods.length;j++){
+
+							goods+= '<tr>'
+
+										+'<td>'+req.order_info.goods[i].goods[j].goodsnum+'</td>'
+
+										+'<td>'+req.order_info.goods[i].goods[j].goodsname+'</td>'
+
+										+'<td>'+req.order_info.goods[i].goods[j].attr+'</td>'
+
+										+'<td>'+req.order_info.goods[i].goods[j].num+'</td>'
+
+									+'</tr>'
+
+							}
+
+							goods+='</tbody></table></div>';
+
+						}
+
+					$('.n_goods').html(goods);
+
+					$('.n_total').html(req.order_info.money);
+
+					$('.n_post').html(req.order_info.postage);
+
+					$('.tans_no').html(req.order_info.tans_no);
+
+					$('.logistics').html(req.order_info.logistics);
+
+					$('.n_pay').html(req.order_info.money);
+
+					$('.n_remark4').val(req.order_info.remark);
+
+				break;
+
+			}
+
+		};
+
+		//console.log(req);
+
+
+
+	});
+
+})
+
+//待付款
+
+$('.payment-preservation-btn').on('click',function(){
+
+
+
+	var leng = $('.pending-payment input').length;
+
+	console.log(leng);
+
+	for (var i = 0; i < leng-1; i++) {
+
+		var in_val = $('.pending-payment input').eq(i).val();
+
+		if (in_val=="") {
+
+			//弹窗
+
+			popup_tip("请将内容填写完整");
+
+			$('.popup-error-mask').removeClass('none');
+
+			$('.popup-error-btn').on('click',function(){
+
+				$('.popup-error-mask').addClass('none');
+
+			});
+
+			return false;
+
+		};
+
+	};
+
+
+
+	var orderid=$('.n_id').html();
+
+	var n_collect_name=$('.n_collect_name').val();
+
+	var n_address=$('.n_address').val();
+
+	var n_phone=$('.n_phone').val();
+
+	var n_total=$('.n_total').val();
+
+	var n_post=$('.n_post').val();
+
+	var n_remark=$('.n_remark1').val();
+
+	var data={
+
+		orderid:orderid,
+
+		name:n_collect_name,
+
+		address:n_address,
+
+		mobile:n_phone,
+
+		pay_money:n_total,
+
+		postage:n_post,
+
+		remark:n_remark
+
+	};
+
+	var url=$(this).attr('data-link');
+
+	console.log(url);
+
+	$.post(url,data).success(function(req){
+
+		console.log(req);
+
+		popup_tip(req.info);
+
+		$('.popup-error-mask').removeClass('none');
+
+		$('.popup-error-btn').on('click',function(){
+
+			window.location.reload();//刷新当前页面.
+
+		});
+
+		setTimeout(function(){
+
+			window.location.reload();//刷新当前页面.
+
+		},3000);
+
+	});
+
+
+
+})
+
+//待发货
+
+$('.delivery-preservation-btn').on('click',function(){
+
+	var logistics_num = $('.n_logistics_num').val();
+
+	var logistics = $('.n_logistics').val();
+
+	var orderid=$('.n_id').html();
+
+	var n_remark=$('.n_remark2').val();
+
+	var data={
+
+		orderid:orderid,
+
+		tans_no:logistics_num,
+
+		logistics:logistics,
+
+		remark:n_remark
+
+	}
+
+	var url=$(this).attr('data-link');
+
+	$.post(url,data).success(function(req){
+
+		console.log(req);
+
+		popup_tip(req.info);
+
+		$('.popup-error-mask').removeClass('none');
+
+		$('.popup-error-btn').on('click',function(){
+
+			window.location.reload();//刷新当前页面.
+
+		});
+
+			setTimeout(function(){
+
+				window.location.reload();//刷新当前页面.
+
+			},3000)
+
+	});
+
+})
+
+//修改备注
+function edit_remark(res,type){
+	var orderid=$('.n_id').html();
+	if(type==1){
+		var n_remark=$('.n_remark3').val();
+	}else{
+		var n_remark=$('.n_remark4').val();
+	}
+	
+	var data={
+
+		orderid:orderid,
+
+		remark:n_remark
+
+	}
+
+	var url=$(res).attr('data-link');
+	
+	$.post(url,data).success(function(req){
+
+		console.log(req);
+
+		popup_tip(req.info);
+
+		$('.popup-error-mask').removeClass('none');
+
+		$('.popup-error-btn').on('click',function(){
+
+			window.location.reload();//刷新当前页面.
+
+		});
+
+			setTimeout(function(){
+
+				window.location.reload();//刷新当前页面.
+
+			},3000)
+
+	});
+}
+
+//显示实付价格
+
+$('.input-money').on('change',function(){
+
+	var n_total=$('.n_total').val();
+
+	var n_post=$('.n_post').val();
+
+	var n_pay= parseFloat(n_post)+parseFloat(n_total);
+
+	$('.n_pay').html(n_pay);
+
+})
+
+//确认支付
+
+$('.confirm-payment').on('click',function(){
+
+	var orderid=$('.n_id').html();
+
+	var url=$(this).attr('data-link');
+
+	popup_order("确认支付");
+
+	$('.popup-tip-mask').removeClass('none');
+
+	$('.confirm-tip-btn').on('click',function(){
+
+		//console.log(url);
+
+		var data ={
+
+			orderid:orderid
+
+		};
+
+		$.post(url,data).success(function(req){
+
+			console.log(req);
+
+			if (req.status==1) {
+
+				popup_tip(req.info);
+
+				$('.popup-tip-mask').addClass('none');
+
+				$('.popup-error-mask').removeClass('none');
+
+				$('.popup-error-btn').on('click',function(){
+
+					window.location.reload();//刷新当前页面.
+
+				});
+
+				setTimeout(function(){
+
+					window.location.reload();//刷新当前页面.
+
+				},2000);
+
+			}
+
+		});
+
+	});
+
+	$('.cancel-tip-btn').on('click',function(){
+
+		$('.popup-tip-mask').addClass('none');
+
+	})
+
+
+
+})
+
+//确认发货
+
+//$('.confirm-delivery')
+
+$('.confirm-delivery').on('click',function(){
+
+	var orderid=$('.n_id').html();
+
+	var logistics_num =$(".n_logistics_num").val();
+
+	var logistics =$(".n_logistics").val();
+
+	var n_remark=$('.n_remark2').val();
+
+	var url=$(this).attr('data-link');
+
+	var b_url=$('.delivery-preservation-btn').attr('data-link');
+
+	var b_data={
+
+		orderid:orderid,
+
+		tans_no:logistics_num,
+
+		logistics:logistics,
+
+		remark:n_remark
+
+	}
+
+	//保存
+
+	$.post(b_url,b_data).success(function(res){
+
+		console.log(res);
+
+	});
+
+	popup_order("确认发货");
+
+	$('.popup-tip-mask').removeClass('none');
+
+	$('.confirm-tip-btn').on('click',function(){
+
+		//console.log(url);
+
+		var data ={
+
+			orderid:orderid,
+
+		};
+
+		$.post(url,data).success(function(req){
+
+			console.log(req);
+
+			if (req.status==0) {
+
+				popup_tip(req.info);
+
+				$('.popup-tip-mask').addClass('none');
+
+				$('.popup-error-mask').removeClass('none');
+
+				$('.popup-error-btn').on('click',function(){
+
+					$('.popup-error-mask').addClass('none');
+
+				});
+
+				return false;
+
+			};
+
+			if (req.status==1) {
+
+
+
+				popup_tip(req.info);
+
+				$('.popup-tip-mask').addClass('none');
+
+				$('.popup-error-mask').removeClass('none');
+
+				$('.popup-error-btn').on('click',function(){
+
+					window.location.reload();//刷新当前页面.
+
+				});
+
+				setTimeout(function(){
+
+					window.location.reload();//刷新当前页面.
+
+				},2000);
+
+			}
+
+		});
+
+	});
+
+	$('.cancel-tip-btn').on('click',function(){
+
+		$('.popup-tip-mask').addClass('none');
+
+	})
+
+
+
+})
+
+//确认收货
+
+$('.confirm-collect').on('click',function(){
+
+	var orderid=$('.n_id').html();
+
+	var url=$(this).attr('data-link');
+
+	popup_order("确认收货");
+
+	$('.popup-tip-mask').removeClass('none');
+
+	$('.confirm-tip-btn').on('click',function(){
+
+		//console.log(url);
+
+		var data ={
+
+			orderid:orderid
+
+		};
+
+		$.post(url,data).success(function(req){
+
+			console.log(req);
+
+			if (req.status==1) {
+
+				popup_tip(req.info);
+
+				$('.popup-tip-mask').addClass('none');
+
+				$('.popup-error-mask').removeClass('none');
+
+				$('.popup-error-btn').on('click',function(){
+
+					window.location.reload();//刷新当前页面.
+
+				});
+
+				setTimeout(function(){
+
+					window.location.reload();//刷新当前页面.
+
+				},2000);
+
+			}
+
+		});
+
+	});
+
+	$('.cancel-tip-btn').on('click',function(){
+
+		$('.popup-tip-mask').addClass('none');
+
+	})
+
+
+
+})
+
+
+
+</script>
+
+</body>
+
+</html>
